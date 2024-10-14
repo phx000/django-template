@@ -8,15 +8,27 @@ from django.core.asgi import get_asgi_application
 from api.ws.routing import websocket_urlpatterns
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
-django_asgi_app = get_asgi_application()
 
-application = ProtocolTypeRouter(
-    {
-        "websocket":
-            AuthMiddlewareStack(
-                URLRouter(
-                    websocket_urlpatterns
+if os.environ.get("DJANGO_DEBUG"):
+    application = ProtocolTypeRouter(
+        {
+            "http": get_asgi_application(),
+            "websocket":
+                AuthMiddlewareStack(
+                    URLRouter(
+                        websocket_urlpatterns
+                    )
                 )
-            )
-    }
-)
+        }
+    )
+else:
+    application = ProtocolTypeRouter(
+        {
+            "websocket":
+                AuthMiddlewareStack(
+                    URLRouter(
+                        websocket_urlpatterns
+                    )
+                )
+        }
+    )
