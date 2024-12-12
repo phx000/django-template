@@ -4,12 +4,11 @@ services:
     ports:
       - 80:80
     env_file:
-      - docker/dev.env
+      - docker/.env
     volumes:
       - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - api
-      - ws
 
   api:
     build:
@@ -18,25 +17,10 @@ services:
     ports:
       - 8000:8000
     env_file:
-      - docker/dev.env
+      - docker/.env
     volumes:
       - .:/app
     command: [ "python", "manage.py", "runserver", "0.0.0.0:8000" ]
-    depends_on:
-      - postgres
-      - rabbitmq
-
-  ws:
-    build:
-      context: .
-      dockerfile: docker/api/Dockerfile
-    ports:
-      - 8001:8001
-    env_file:
-      - docker/dev.env
-    volumes:
-      - .:/app
-    command: [ "python", "manage.py", "runserver", "0.0.0.0:8001" ]
     depends_on:
       - postgres
       - rabbitmq
@@ -46,7 +30,7 @@ services:
       context: .
       dockerfile: docker/api/Dockerfile
     env_file:
-      - docker/dev.env
+      - docker/.env
     volumes:
       - .:/app
     command: sh -c "python manage.py migrate && celery -A backend worker -l INFO"
@@ -61,7 +45,7 @@ services:
     ports:
       - 5173:5173
     env_file:
-      - docker/dev.env
+      - docker/.env
     volumes:
       - ./frontend:/app
       - /app/node_modules
@@ -76,7 +60,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     env_file:
-      - docker/dev.env
+      - docker/.env
 
   rabbitmq:
     image: rabbitmq:3.13-management
@@ -86,18 +70,8 @@ services:
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
     env_file:
-      - docker/dev.env
-
-  redis:
-    image: redis:7
-    ports:
-      - 6379:6379
-    volumes:
-      - redis_data:/data
-    env_file:
-      - docker/dev.env
+      - docker/.env
 
 volumes:
   postgres_data:
   rabbitmq_data:
-  redis_data:

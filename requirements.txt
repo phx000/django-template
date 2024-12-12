@@ -1,9 +1,5 @@
 celery
-channels
-channels-redis
-daphne
 djangorestframework
-django-hosts
 gunicorn
 pyOpenSSL
 service-identity
