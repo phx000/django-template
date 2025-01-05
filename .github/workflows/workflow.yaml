@@ -29,7 +29,7 @@ jobs:
 
     - name: Determine deployment environment
       run: |
-        deply_env=$( [ "${{ github.ref_name }}" = "dev" ] && echo "dev" || echo "prod" ) 
+        deploy_env=$( [ "${{ github.ref_name }}" = "dev" ] && echo "dev" || echo "prod" ) 
         echo "DEPLOY_ENV=$deploy_env" >> $GITHUB_ENV
 
     - name: Test deployment environment to be correct
