@@ -13,8 +13,6 @@ COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
-
 COPY api/ /app/api/
 COPY backend/ /app/backend/
 COPY manage.py /app/

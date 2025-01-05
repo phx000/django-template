@@ -1,0 +1,34 @@
+env: dev
+
+services:
+  api:
+    replicas: 1
+    requests:
+      memory: "128Mi"
+      cpu: "75m"
+    limits:
+      memory: "256Mi"
+      cpu: "200m"
+  queue:
+    requests:
+      memory: "128Mi"
+      cpu: "75m"
+    limits:
+      memory: "256Mi"
+      cpu: "200m"
+  worker:
+    replicas: 1
+    requests:
+      memory: "128Mi"
+      cpu: "75m"
+    limits:
+      memory: "256Mi"
+      cpu: "200m"
+
+
+
+image:
+  name: registry.digitalocean.com/registry-first/template_api
+  version: latest
+
+imagePullPolicy: Always

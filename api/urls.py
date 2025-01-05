@@ -1,12 +1,10 @@
-from django.urls import re_path
+from django.urls import re_path, path
 from django.http import JsonResponse
 
-
-def error_404_view(request):
-    return JsonResponse({
-        "detail": "This resource does not exist."
-    }, status=404)
+from api.views.functional_views import error_404, health_check, readiness_check
 
 urlpatterns = [
-    re_path(r'^.*$', error_404_view, name="404"),
+    path("healthz", health_check, name="healthz"),
+    path("readiness", readiness_check, name="readiness"),
+    re_path(r'^.*$', error_404, name="404"),
 ]
