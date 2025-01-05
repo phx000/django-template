@@ -31,6 +31,7 @@ jobs:
       run: |
         deply_env=$( [ "${{ github.ref_name }}" = "dev" ] && echo "dev" || echo "prod" ) 
         echo "DEPLOY_ENV=$deploy_env" >> $GITHUB_ENV
+        echo $GITHUB_ENV
 
     - name: Inject ConfigMap as env vars into runner
       run: |
