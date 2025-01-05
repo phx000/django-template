@@ -31,6 +31,7 @@ for k8s:
 - run py manage.py tests --keepdb
 - change name of helm chart
 - set all the secrets and vars in the gh repo (or dont, if the repo is going to be forked)
+- create a dev and prod db in postgres
 
 todos:
 - review all env vars and config vars

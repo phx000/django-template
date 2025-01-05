@@ -29,8 +29,6 @@ spec:
           envFrom:
             - configMapRef:
                 name: configmap
-            - secretRef:
-                name: secret
           resources:
             requests:
               memory: {{ .Values.services.worker.requests.memory }}

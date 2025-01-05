@@ -11,10 +11,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Determine env
-      run: |
-        ENV=$( [ "${{ github.head_ref || github.ref_name }}" = "dev" ] && echo "dev" || echo "prod" )
-
     - name: Checkout code
       uses: actions/checkout@v4
 
@@ -27,6 +23,27 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+
+    - name: Determine deployment environment
+      run: |
+        deply_env=$( [ "${{ github.ref_name }}" = "dev" ] && echo "dev" || echo "prod" ) 
+        echo "DEPLOY_ENV=$deploy_env" >> $GITHUB_ENV
+
+    - name: Inject ConfigMap as env vars into runner
+      run: |
+        helm template main ./k8s \
+          --values ./k8s/values-$DEPLOY_ENV.yaml \
+          --namespace $DEPLOY_ENV \
+          --show-only templates/configmap.json \
+          > ./k8s/_configmap_output.json
+        env_vars=$(python ./k8s/configmap_to_env_vars.py)
+        echo "$env_vars" >> $GITHUB_ENV
+
+    - name: Inject secrets into runner
+      run: |
+        echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> $GITHUB_ENV
+        echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> $GITHUB_ENV
+
 
     - name: Run tests
       run: |
@@ -46,7 +63,7 @@ jobs:
     - name: Build and Push Docker Image
       run: |
         IMAGE_NAME=registry.digitalocean.com/${{ vars.CONTAINER_REGISTRY }}/${{ vars.IMAGE_NAME }}
-        IMAGE_VERSION=$ENV-${{ github.run_number }}
+        IMAGE_VERSION=$DEPLOY_ENV-${{ github.run_number }}
         docker build -t $IMAGE_NAME:$IMAGE_VERSION .
         docker push $IMAGE_NAME:$IMAGE_VERSION
 
@@ -61,6 +78,6 @@ jobs:
     - name: Upgrade Helm Chart
       run: |
         helm upgrade --install main ./k8s \
-          --namespace $ENV \
+          --namespace $DEPLOY_ENV \
           --set image.version=$IMAGE_VERSION \
           --wait
