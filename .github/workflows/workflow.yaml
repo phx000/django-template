@@ -39,7 +39,7 @@ jobs:
         IMAGE_VERSION=$DEPLOY_ENV-$(git rev-list --count HEAD)
         echo "IMAGE_FULL_NAME=${IMAGE_NAME}:${IMAGE_VERSION}" >> $GITHUB_ENV
         echo "Building image with: ${{ env.IMAGE_FULL_NAME }}" 
-        docker build -t "${{ env.IMAGE_FULL_NAME }} -f ./docker/api/Dockerfile .
+        docker build -t "${{ env.IMAGE_FULL_NAME }}" -f ./docker/api/Dockerfile .
         
     - name: Convert ConfigMap into .env and inject secrets
       run: |
