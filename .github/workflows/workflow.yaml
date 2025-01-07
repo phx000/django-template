@@ -38,7 +38,7 @@ jobs:
         IMAGE_NAME=registry.digitalocean.com/${{ vars.CONTAINER_REGISTRY }}/${{ vars.IMAGE_NAME }}
         IMAGE_VERSION=$DEPLOY_ENV-$(git rev-list --count HEAD)
         
-        IMAGE_FULL_NAME = "${IMAGE_NAME}:${IMAGE_VERSION}" 
+        IMAGE_FULL_NAME="${IMAGE_NAME}:${IMAGE_VERSION}" 
         
         echo "IMAGE_FULL_NAME=$IMAGE_FULL_NAME" >> $GITHUB_ENV
         
