@@ -39,8 +39,7 @@ jobs:
         IMAGE_VERSION=$DEPLOY_ENV-$(git rev-list --count HEAD)
         echo "Name var: $IMAGE_NAME" 
         echo "Version var: $IMAGE_VERSION" 
-        echo "Building image with: $IMAGE_FULL_NAME" 
-        echo "IMAGE_FULL_NAME=$IMAGE_NAME:$IMAGE_VERSION" >> $GITHUB_ENV
+        echo "IMAGE_FULL_NAME=${IMAGE_NAME}:${IMAGE_VERSION}" >> $GITHUB_ENV
         echo "Building image with: $IMAGE_FULL_NAME" 
         docker build -t "$IMAGE_FULL_NAME" -f ./docker/api/Dockerfile .
         
