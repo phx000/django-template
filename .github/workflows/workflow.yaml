@@ -38,7 +38,7 @@ jobs:
         IMAGE_NAME=registry.digitalocean.com/${{ vars.CONTAINER_REGISTRY }}/${{ vars.IMAGE_NAME }}
         IMAGE_VERSION=$DEPLOY_ENV-${{ github.run_number }}
         echo "IMAGE_FULL_NAME=$IMAGE_NAME:$IMAGE_VERSION" >> $GITHUB_ENV
-        docker build -t $IMAGE_FULL_NAME -f /docker/api/Dockerfile .
+        docker build -t $IMAGE_VERSION -f ./docker/api/Dockerfile .
         
     - name: Convert ConfigMap into .env and inject secrets
       run: |
@@ -48,7 +48,7 @@ jobs:
                   --show-only templates/configmap.json \
                   > ./k8s/_configmap_output.json
         python ./k8s/configmap_to_env_file.py
-        echo DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }} >> ./k8s/_configmap.env
+        echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> ./k8s/_configmap.env
         echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> ./k8s/_configmap.env
 
     - name: Run Docker container
