@@ -36,9 +36,9 @@ jobs:
     - name: Build Docker image
       run: |
         IMAGE_NAME=registry.digitalocean.com/${{ vars.CONTAINER_REGISTRY }}/${{ vars.IMAGE_NAME }}
-        IMAGE_VERSION=$DEPLOY_ENV-${{ github.run_number }}
+        IMAGE_VERSION=$DEPLOY_ENV-$(git rev-list --count HEAD)
         echo "IMAGE_FULL_NAME=$IMAGE_NAME:$IMAGE_VERSION" >> $GITHUB_ENV
-        docker build -t $IMAGE_VERSION -f ./docker/api/Dockerfile .
+        docker build -t $IMAGE_FULL_NAME -f ./docker/api/Dockerfile .
         
     - name: Convert ConfigMap into .env and inject secrets
       run: |
