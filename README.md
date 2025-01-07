@@ -35,3 +35,41 @@ for k8s:
 
 todos:
 - review all env vars and config vars
+
+
+
+
+steps:
+- install py
+- install helm
+
+- inject configmap
+- inject secrets
+
+- run tests
+- log into docker hub
+
+- install doctl
+- build and push docker image
+- set up kubectl
+- upgrade helm chart
+---------------------------
+
+- install py
+- install helm
+
+- log into docker hub
+- build image
+
+- inject configmap
+- inject secrets
+
+- run tests
+
+- install doctl
+
+- push image
+
+- set up kubectl
+
+- upgrade helm chart

@@ -301,3 +301,6 @@ sketch
 # End of https://www.toptal.com/developers/gitignore/api/django,pycharm,react
 
 frontend
+
+k8s/_configmap_output.json
+k8s/_configmap.env
