@@ -44,7 +44,7 @@ jobs:
         
         echo "Building image with: $IMAGE_FULL_NAME"
         
-        docker build -t "${{ IMAGE_FULL_NAME }}" -f ./docker/api/Dockerfile .
+        docker build -t "${ IMAGE_FULL_NAME }" -f ./docker/api/Dockerfile .
         
     - name: Convert ConfigMap into .env and inject secrets
       run: |
