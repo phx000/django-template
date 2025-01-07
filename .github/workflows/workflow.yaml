@@ -59,7 +59,7 @@ jobs:
 
     - name: Tun tests
       run: |
-        docker exec python manage.py test
+        docker exec api python manage.py test
 
     - name: Install doctl
       uses: digitalocean/action-doctl@v2
