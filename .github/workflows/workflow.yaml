@@ -24,9 +24,8 @@ jobs:
 
     - name: Determine deployment environment
       run: |
-#        deploy_env=$( [ "${{ github.ref_name }}" = "dev" ] && echo "dev" || echo "prod" )
-#        echo "DEPLOY_ENV=$deploy_env" >> $GITHUB_ENV
-        echo "DEPLOY_ENV=$( [ "${{ github.ref_name }}" = "dev" ] && echo "dev" || echo "prod" )" >> $GITHUB_ENV
+        deploy_env=$( [ "${{ github.ref_name }}" = "dev" ] && echo "dev" || echo "prod" )
+        echo "DEPLOY_ENV=$deploy_env" >> $GITHUB_ENV
 
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
