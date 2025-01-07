@@ -48,18 +48,14 @@ jobs:
                   --values ./k8s/values-$DEPLOY_ENV.yaml \
                   --namespace $DEPLOY_ENV \
                   --show-only templates/configmap.json \
-                  > ./k8s/_configmap_output.json
-        python ./k8s/configmap_to_env_file.py
-        echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> ./k8s/_configmap.env
-        echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> ./k8s/_configmap.env
+                  > ./.github/_configmap_output.json
+        python ./.github/configmap_to_env_file.py
+        echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> ./.github/_configmap.env
+        echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> ./.github/_configmap.env
 
-    - name: Run Docker container
+    - name: Run tests
       run: |
-        docker run -d --name api $IMAGE_FULL_NAME
-
-    - name: Tun tests
-      run: |
-        docker exec api python manage.py test
+        docker run -d --name api $IMAGE_FULL_NAME python manage.py test
 
     - name: Install doctl
       uses: digitalocean/action-doctl@v2
