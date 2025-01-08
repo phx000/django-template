@@ -79,6 +79,10 @@ jobs:
     - name: Authenticate in cluster
       run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ vars.CLUSTER_NAME }}
 
+    - name: Apply db migrations
+      run: |
+        docker run --name api --env-file ./.github/_configmap.env $IMAGE_FULL_NAME python manage.py migrate
+
     - name: Upgrade Helm Chart
       run: |
         helm upgrade --install main ./k8s \
