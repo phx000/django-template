@@ -73,3 +73,6 @@ steps:
 - set up kubectl
 
 - upgrade helm chart
+----
+
+deal with migrations
