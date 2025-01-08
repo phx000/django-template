@@ -57,7 +57,7 @@ jobs:
 
     - name: Run tests
       run: |
-        docker run -d --name api $IMAGE_FULL_NAME --env-file ./.github/_configmap.env python manage.py test
+        docker run -d --name api --env-file ./.github/_configmap.env $IMAGE_FULL_NAME python manage.py test
 
     - name: Install doctl
       uses: digitalocean/action-doctl@v2
