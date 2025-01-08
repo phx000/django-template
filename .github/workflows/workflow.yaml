@@ -81,7 +81,7 @@ jobs:
 
     - name: Apply db migrations
       run: |
-        docker run --name api --env-file ./.github/_configmap.env $IMAGE_FULL_NAME python manage.py migrate
+        docker exec api python manage.py migrate
 
     - name: Upgrade Helm Chart
       run: |
