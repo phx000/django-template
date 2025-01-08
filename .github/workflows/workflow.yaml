@@ -57,12 +57,15 @@ jobs:
 
     - name: Run tests
       run: |
-        docker run -d --name api --env-file ./.github/_configmap.env $IMAGE_FULL_NAME python manage.py test
+        docker run --name api --env-file ./.github/_configmap.env $IMAGE_FULL_NAME python manage.py test
 
     - name: Install doctl
       uses: digitalocean/action-doctl@v2
       with:
         token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+
+    - name: Verify log-in
+      run: doctl k8s cluster list
 
     - name: Push image
       run: |
