@@ -59,7 +59,7 @@ jobs:
 
     - name: Debug
       run: |
-        echo ./.github/_configmap.env
+        cat ./.github/_configmap.env
 
     - name: Apply db migrations
       run: |
