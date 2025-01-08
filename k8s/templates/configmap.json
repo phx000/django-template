@@ -7,7 +7,7 @@
   },
   "data": {
     "PYTHONUNBUFFERED": "1",
-    "DJANGO_ALLOWED_HOSTS": "dev.com,prod.com",
+    "DJANGO_ALLOWED_HOSTS": "localhost,127.0.0.1,api,api-service,api-service.dev,api-service.prod,api-service.dev.svc.cluster.local,api-service.prod.svc.cluster.local,dev.com,prod.com",
     "POSTGRES_DB": "{{ .Release.Namespace }}",
     "POSTGRES_HOST": "private-db-first-do-user-18564023-0.m.db.ondigitalocean.com",
     "POSTGRES_PORT": "25060",
