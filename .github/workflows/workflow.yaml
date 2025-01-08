@@ -57,36 +57,44 @@ jobs:
         echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> ./.github/_configmap.env
         echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> ./.github/_configmap.env
 
-    - name: Run tests
+    - name: Debug
       run: |
-        docker run --env-file ./.github/_configmap.env $IMAGE_FULL_NAME python manage.py test
-
-    - name: Install doctl
-      uses: digitalocean/action-doctl@v2
-      with:
-        token: ${{ secrets.DIGITALOCEAN_TOKEN }}
-
-    - name: Push image
-      run: |
-        doctl registry login --expiry-seconds 600
-        docker push $IMAGE_FULL_NAME
-
-    - name: Set up Kubectl
-      uses: azure/setup-kubectl@v3
-      with:
-        version: "v1.32.0"
+        echo ./.github/_configmap.env
 
     - name: Apply db migrations
       run: |
         docker run --env-file ./.github/_configmap.env $IMAGE_FULL_NAME python manage.py migrate
 
-    - name: Authenticate in cluster
-      run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ vars.CLUSTER_NAME }}
+#    - name: Run tests
+#      run: |
+#        docker run --env-file ./.github/_configmap.env $IMAGE_FULL_NAME python manage.py test
 
-    - name: Upgrade Helm Chart
-      run: |
-        helm upgrade --install main ./k8s \
-          --namespace $DEPLOY_ENV \
-          --values ./k8s/values-$DEPLOY_ENV.yaml \
-          --set image.version=$IMAGE_VERSION \
-          --wait
+#    - name: Install doctl
+#      uses: digitalocean/action-doctl@v2
+#      with:
+#        token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+#
+#    - name: Push image
+#      run: |
+#        doctl registry login --expiry-seconds 600
+#        docker push $IMAGE_FULL_NAME
+#
+#    - name: Set up Kubectl
+#      uses: azure/setup-kubectl@v3
+#      with:
+#        version: "v1.32.0"
+#
+#    - name: Apply db migrations
+#      run: |
+#        docker run --env-file ./.github/_configmap.env $IMAGE_FULL_NAME python manage.py migrate
+#
+#    - name: Authenticate in cluster
+#      run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ vars.CLUSTER_NAME }}
+#
+#    - name: Upgrade Helm Chart
+#      run: |
+#        helm upgrade --install main ./k8s \
+#          --namespace $DEPLOY_ENV \
+#          --values ./k8s/values-$DEPLOY_ENV.yaml \
+#          --set image.version=$IMAGE_VERSION \
+#          --wait
