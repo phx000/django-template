@@ -59,7 +59,7 @@ jobs:
 
     - name: Run tests
       run: |
-        docker run --name api --env-file ./.github/_configmap.env $IMAGE_FULL_NAME python manage.py test
+        docker run --env-file ./.github/_configmap.env $IMAGE_FULL_NAME python manage.py test
 
     - name: Install doctl
       uses: digitalocean/action-doctl@v2
@@ -81,7 +81,7 @@ jobs:
 
     - name: Apply db migrations
       run: |
-        docker exec api python manage.py migrate
+        docker run --env-file ./.github/_configmap.env $IMAGE_FULL_NAME python manage.py migrate
 
     - name: Upgrade Helm Chart
       run: |
