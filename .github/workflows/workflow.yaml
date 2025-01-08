@@ -64,11 +64,9 @@ jobs:
       with:
         token: ${{ secrets.DIGITALOCEAN_TOKEN }}
 
-    - name: Verify log-in
-      run: doctl k8s cluster list
-
     - name: Push image
       run: |
+        doctl registry login
         docker push $IMAGE_FULL_NAME
 
     - name: Set up Kubectl
