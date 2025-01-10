@@ -9,43 +9,43 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_TOKEN }}
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
 
-    - name: Build Docker image
-      run: |
-        IMAGE_NAME=registry.digitalocean.com/${{ vars.CONTAINER_REGISTRY }}/${{ vars.IMAGE_NAME }}
-        IMAGE_VERSION=$DEPLOY_ENV-$(git rev-list --count HEAD)
-        IMAGE_FULL_NAME="${IMAGE_NAME}:${IMAGE_VERSION}" 
+      - name: Build Docker image
+        run: |
+          IMAGE_NAME=registry.digitalocean.com/${{ vars.CONTAINER_REGISTRY }}/${{ vars.IMAGE_NAME }}
+          IMAGE_VERSION=$DEPLOY_ENV-$(git rev-list --count HEAD)
+          IMAGE_FULL_NAME="${IMAGE_NAME}:${IMAGE_VERSION}" 
+  
+          echo "IMAGE_VERSION=$IMAGE_VERSION" >> $GITHUB_ENV
+          echo "IMAGE_FULL_NAME=$IMAGE_FULL_NAME" >> $GITHUB_ENV
+  
+          docker build -t "$IMAGE_FULL_NAME" -f ./docker/api/Dockerfile .
 
-        echo "IMAGE_VERSION=$IMAGE_VERSION" >> $GITHUB_ENV
-        echo "IMAGE_FULL_NAME=$IMAGE_FULL_NAME" >> $GITHUB_ENV
+      - name: Run tests
+        run: |
+          docker run \
+          -e PYTHONBUFFERED=1 \
+          -e DJANGO_SECRET_KEY=insecure_key_for_testing_only \
+          -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
+          python manage.py test
 
-        docker build -t "$IMAGE_FULL_NAME" -f ./docker/api/Dockerfile .
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
 
-    - name: Run tests
-      run: |
-        docker run \
-        -e PYTHONBUFFERED=1 \
-        -e DJANGO_SECRET_KEY=insecure_key_for_testing_only \
-        -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
-        python manage.py test
-
-    - name: Install doctl
-      uses: digitalocean/action-doctl@v2
-      with:
-        token: ${{ secrets.DIGITALOCEAN_TOKEN }}
-
-    - name: Push image
-      run: |
-        doctl registry login --expiry-seconds 600
-        docker push $IMAGE_FULL_NAME
+      - name: Push image
+        run: |
+          doctl registry login --expiry-seconds 600
+          docker push $IMAGE_FULL_NAME
