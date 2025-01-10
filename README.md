@@ -75,4 +75,5 @@ steps:
 - upgrade helm chart
 ----
 
-deal with migrations
+i need to have migrations applied in the build / cicd.
+i need to get the queue and celery properly connected
