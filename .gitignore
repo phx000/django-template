@@ -302,7 +302,9 @@ sketch
 
 frontend
 
-k8s/_configmap_output.json
-k8s/_configmap.env
+.github/_configmap_output.json
+.github/_configmap.env
 
 .github/workflows/prev.txt
+
+.github/_app_spec.json

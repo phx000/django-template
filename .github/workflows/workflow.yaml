@@ -50,3 +50,18 @@ jobs:
         run: |
           doctl registry login --expiry-seconds 600
           docker push $IMAGE_FULL_NAME
+          
+      - name: Install python (for workflow scripting)
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10.12"
+
+      - name: Update image
+        run: |
+          doctl app spec get ${{ secrets.DIGITALOCEAN_APP_ID }} --format json >> >> ./.github/_app_spec.json
+          python ./.github/update_app_spec.py
+          
+          echo $IMAGE_VERSION
+          cat ./.github/_app_spec.json
+          
+          doctl app update --spec ./.github/_app_spec.json
