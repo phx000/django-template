@@ -50,3 +50,12 @@ jobs:
         run: |
           doctl registry login --expiry-seconds 600
           docker push $IMAGE_FULL_NAME
+
+      - name: Apply django migrations
+        run: |
+          docker run \
+          -e PYTHONBUFFERED=1 \
+          -e DJANGO_SECRET_KEY=insecure_key_for_testing_only \
+          -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
+          $IMAGE_FULL_NAME \
+          python manage.py migrate
