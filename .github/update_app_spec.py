@@ -1,7 +1,7 @@
 import json
 import os
 
-with open(".github/workflows/_app_spec.json") as f:
+with open(".github/_app_spec.json") as f:
     data = json.load(f)
 
 for s in data["services"]:
@@ -14,5 +14,5 @@ for w in data["workers"]:
         w["image"]["tag"] = os.getenv("IMAGE_VERSION")
         break
 
-with open(".github/workflows/_app_spec.json", "w") as f:
+with open(".github/_app_spec.json", "w") as f:
     json.dump(f, data)
