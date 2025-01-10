@@ -15,4 +15,4 @@ for w in data["workers"]:
         break
 
 with open(".github/_app_spec.json", "w") as f:
-    json.dump(f, data)
+    json.dump(data, f)
