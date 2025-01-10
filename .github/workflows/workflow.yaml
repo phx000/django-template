@@ -38,6 +38,7 @@ jobs:
           -e PYTHONBUFFERED=1 \
           -e DJANGO_SECRET_KEY=insecure_key_for_testing_only \
           -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
+          $IMAGE_FULL_NAME \
           python manage.py test
 
       - name: Install doctl
