@@ -58,7 +58,7 @@ jobs:
 
       - name: Update image
         run: |
-          doctl app spec get ${{ secrets.DIGITALOCEAN_APP_ID }} --format json >> >> ./.github/_app_spec.json
+          doctl app spec get ${{ secrets.DIGITALOCEAN_APP_ID }} --format json >> ./.github/_app_spec.json
           python ./.github/update_app_spec.py
           
           echo $IMAGE_VERSION
