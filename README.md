@@ -74,3 +74,5 @@ steps:
 
 - upgrade helm chart
 ----
+
+change the healthz endopint to health
