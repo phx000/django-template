@@ -1,0 +1,88 @@
+alerts:
+- rule: DEPLOYMENT_FAILED
+- rule: DOMAIN_FAILED
+databases:
+- cluster_name: db-first
+  db_name: prod
+  db_user: doadmin
+  engine: PG
+  name: db-first
+  production: true
+  version: "16"
+envs:
+- key: PYTHONUNBUFFERED
+  scope: RUN_AND_BUILD_TIME
+  value: "1"
+- key: DJANGO_ALLOWED_HOSTS
+  scope: RUN_AND_BUILD_TIME
+  value: localhost,127.0.0.1,django-template-z9trv.ondigitalocean.app
+- key: DJANGO_SECRET_KEY
+  scope: RUN_AND_BUILD_TIME
+  type: SECRET
+  value: EV[1:JfkZwPx4XeH7UW3FIQhlVV2OUR1JhYxC:fnarTe0DwayCH11fkigz8KNVeNGA3ZSzddH7OmjavV41sPKRQqVVO+9PT+f1sZcd]
+- key: DATABASE_URL
+  scope: RUN_AND_BUILD_TIME
+  type: SECRET
+  value: EV[1:kAKYJuGO/fCwYNLLfq0XYrw91Q+Q6/dv:VzIKDOaoUPu/6RET1Q7jaD6i9XDE1ZPKmqyFmVoEuNi3JHHHykOZOA==]
+features:
+- buildpack-stack=ubuntu-22
+ingress:
+  rules:
+  - component:
+      name: api
+    match:
+      path:
+        prefix: /
+jobs:
+- environment_slug: python
+  image:
+    deploy_on_push: {}
+    registry_type: DOCR
+    repository: template_api
+    tag: "66"
+  instance_count: 1
+  instance_size_slug: apps-s-1vcpu-0.5gb
+  kind: POST_DEPLOY
+  name: success-job
+  run_command: python manage.py migrate
+  source_dir: /
+maintenance: {}
+name: django-template
+region: fra
+services:
+- health_check: {}
+  http_port: 8000
+  image:
+    deploy_on_push: {}
+    registry_type: DOCR
+    repository: template_api
+    tag: "66"
+  instance_count: 1
+  instance_size_slug: apps-s-1vcpu-0.5gb
+  name: api
+  run_command: |
+    gunicorn --bind 0.0.0.0:8000 backend.wsgi:application
+- image:
+    registry: library
+    registry_type: DOCKER_HUB
+    repository: rabbitmq
+    tag: 4-management
+  instance_count: 1
+  instance_size_slug: apps-s-1vcpu-0.5gb
+  internal_ports:
+  - 5672
+  name: queue
+workers:
+- envs:
+  - key: DATABASE_URL
+    scope: RUN_TIME
+    value: ${db-first.DATABASE_URL}
+  image:
+    deploy_on_push: {}
+    registry_type: DOCR
+    repository: template_api
+    tag: "66"
+  instance_count: 1
+  instance_size_slug: apps-s-1vcpu-0.5gb
+  name: worker
+  run_command: celery -A backend worker -l INFO
